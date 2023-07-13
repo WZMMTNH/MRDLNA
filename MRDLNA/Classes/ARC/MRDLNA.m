@@ -13,7 +13,7 @@
 @property(nonatomic,strong) CLUPnPServer *upd;              //MDS服务器
 @property(nonatomic,strong) NSMutableArray *dataArray;
 
-@property(nonatomic,strong) CLUPnPRenderer *render;         //MDR渲染器
+//@property(nonatomic,strong) CLUPnPRenderer *render;         //MDR渲染器
 @property(nonatomic,copy) NSString *volume;
 @property(nonatomic,assign) NSInteger seekTime;
 @property(nonatomic,assign) BOOL isPlaying;
@@ -164,14 +164,40 @@
 
 - (void)upnpGetTransportInfoResponse:(CLUPnPTransportInfo *)info{
 //    NSLog(@"%@ === %@", info.currentTransportState, info.currentTransportStatus);
-    if (!([info.currentTransportState isEqualToString:@"PLAYING"] || [info.currentTransportState isEqualToString:@"TRANSITIONING"])) {
-        [self.render play];
+//    if (!([info.currentTransportState isEqualToString:@"PLAYING"] || [info.currentTransportState isEqualToString:@"TRANSITIONING"])) {
+//        [self.render play];
+//    }
+
+    if (_delegate && [_delegate respondsToSelector:@selector(dlnaupnpGetTransportInfoResponse:)]) {
+        [_delegate dlnaupnpGetTransportInfoResponse:info];
+    }
+}
+
+//获取播放进度
+- (void)upnpGetPositionInfoResponse:(CLUPnPAVPositionInfo *)info
+{
+    if ([self.delegate respondsToSelector:@selector(dlnaupnpGetPositionInfoResponse:)]) {
+        [self.delegate dlnaupnpGetPositionInfoResponse:info];
     }
 }
 
 - (void)upnpPlayResponse{
     if ([self.delegate respondsToSelector:@selector(dlnaStartPlay)]) {
         [self.delegate dlnaStartPlay];
+    }
+}
+
+- (void)upnpPauseResponse
+{
+    if ([self.delegate respondsToSelector:@selector(dlnaStartPause)]) {
+        [self.delegate dlnaStartPause];
+    }
+}
+
+- (void)upnpSeekResponse
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dlnaupnpSeekResponse)]) {
+        [self.delegate dlnaupnpSeekResponse];
     }
 }
 
