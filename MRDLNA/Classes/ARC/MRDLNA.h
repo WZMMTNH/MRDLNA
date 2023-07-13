@@ -24,6 +24,17 @@
  */
 - (void)dlnaStartPlay;
 
+- (void)dlnaStartPause;
+
+///**
+// 获取播放进度
+// */
+- (void)dlnaupnpGetPositionInfoResponse:(CLUPnPAVPositionInfo *)info;
+
+- (void)dlnaupnpGetTransportInfoResponse:(CLUPnPTransportInfo *)info;
+
+- (void)dlnaupnpSeekResponse;
+
 @end
 
 @interface MRDLNA : NSObject
@@ -35,6 +46,8 @@
 @property(nonatomic,copy) NSString *playUrl;
 
 @property(nonatomic,assign) NSInteger searchTime;
+
+@property(nonatomic,strong) CLUPnPRenderer *render;         //MDR渲染器
 
 /**
  单例
